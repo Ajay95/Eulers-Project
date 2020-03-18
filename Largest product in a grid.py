@@ -45,5 +45,9 @@ for i in range(len(matrix)):
              print(curr_sum,down_max)
              down_max=curr_sum
         col=np.delete(col,[0,1,2,3,4])
-    
+"Up"
+"""
+Interhcange rows 
+"""
+
         
