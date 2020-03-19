@@ -109,5 +109,7 @@ if __name__=="__main__":
         53503534226472524250874054075591789781264330331690'''
    y=0
    for i in x.split("\n"):
-       y=y+int(i)
+       print(type(i))
+       print("\n")
+       #y=y+int(i)
    print(y)
