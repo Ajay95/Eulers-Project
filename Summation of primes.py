@@ -13,7 +13,7 @@ if __name__ == "__main__":
     for i in range(2,2000000):
         x.append(i)
     
-    while len(x)!=0:
+    while len(x)!=1:
         for i in x:
             if i%p==0:
                 x.remove(i)
