@@ -6,6 +6,8 @@ Created on Wed Mar 18 04:48:17 2020
 """
 if __name__ =="__main__":
     import numpy as np
+    from operator import mul
+    from functools import reduce
     matrix=[]
     raw_matrix = '''\
     08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
@@ -27,36 +29,84 @@ if __name__ =="__main__":
     04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36
     20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16
     20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
-    01 70 54 71 99 99 99 99 16 92 33 48 61 43 52 01 89 19 67 48'''.split("\n")
+    01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48'''.split("\n")
     for i in raw_matrix:
         for j in i.split():
             matrix.append(int(j))
     matrix=np.asarray(matrix)
     matrix=matrix.reshape(20,20)
     
-    """
-    Down
-    """
+   
     down_max=0
     for i in range(len(matrix)):
         col=matrix[:,i]
-        while len(col)!=0:
-            curr_sum=np.prod(col[0:3])
+        while len(col)!=0 and len(col[0:4])==4:
+            #print(col[0:4])
+            curr_sum=np.prod(col[0:4])
             if curr_sum>down_max:
                  down_max=curr_sum
-            col=np.delete(col,[0,1,2,3])
-    "Up"
+            col=np.delete(col,0)
+
     
     up_max=0
     for i in range(len(matrix)):
         col=matrix[:,i]
-        while len(col)!=0:
-            curr_sum=np.prod(col[0:3])
+        while len(col)!=0 and len(col[-4:])==4:
+            #print(col[-4:])
+            curr_sum=np.prod(col[-4:])
             if curr_sum>up_max:
                  up_max=curr_sum
             col=np.delete(col,-1)
-            col=np.delete(col,-1)
-            col=np.delete(col,-1)
-            col=np.delete(col,-1)
     
-            
+    
+    left_max=0
+    for i in range(len(matrix)):
+        row=matrix[i,:]
+        while len(row)!=0 and len(row[0:4])==4:
+            #print(row[0:4])
+            curr_sum=np.prod(row[0:4])
+            #print(curr_sum)
+            if curr_sum>left_max:
+                 left_max=curr_sum
+            row=np.delete(row,0)
+    
+    
+    right_max=0
+    for i in range(len(matrix)):
+        row=matrix[i,:]
+        while len(row)!=0 and len(row[-4:])==4:
+            #print(row[-4:])
+            curr_sum=np.prod(row[-4:])
+            if curr_sum>right_max:
+                 right_max=curr_sum
+            row=np.delete(row,-1)
+    
+    
+    diag_max=0
+    col,row=0,0
+    while(col!=17 or row!=16):
+        if col==17:
+            row=row+1
+            col=0
+     #   print(matrix[row,col],matrix[row+1,col+1],matrix[row+2,col+2],matrix[row+3,col+3])
+        curr_max=reduce(mul, [matrix[row,col],matrix[row+1,col+1],matrix[row+2,col+2],matrix[row+3,col+3]], 1)
+        if curr_max>diag_max:
+                 diag_max=curr_max
+        col=col+1
+        
+    rev_diag_max=0
+    col,row=0,19
+    while(col!=17 or row!=3):
+        if col==17:
+            row=row-1
+            col=0
+        #print((row,col),(row-1,col+1),(row-2,col+2),(row-3,col+3))
+        #print(matrix[row,col],matrix[row-1,col+1],matrix[row-2,col+2],matrix[row-3,col+3])
+        curr_max=reduce(mul, [matrix[row,col],matrix[row-1,col+1],matrix[row-2,col+2],matrix[row-3,col+3]], 1)
+        #print(curr_max)
+        if curr_max>rev_diag_max:
+                 rev_diag_max=curr_max
+        col=col+1
+    print(max([diag_max,up_max,down_max,left_max,right_max,rev_diag_max]))
+    
+    
